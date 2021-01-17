@@ -58,6 +58,7 @@ namespace ELaundry.Controllers
         
     }
 
+        // Return the user to thank you page. 
         public ActionResult Thankyou()
         {
             return View();
