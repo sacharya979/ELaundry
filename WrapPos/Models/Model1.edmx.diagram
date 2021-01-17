@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="025c4dfb29654d149e50fdd19392acbc" Name="Diagram1">
+        <EntityTypeShape EntityType="ELaundryDBModel.tblBranch" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblCategory" Width="1.5" PointX="8.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblClosing" Width="1.5" PointX="3" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblGarment" Width="1.5" PointX="11" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblInvoice" Width="1.5" PointX="6" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblOrder" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblOrderItem" Width="1.5" PointX="13.25" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblRole" Width="1.5" PointX="0.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblSetting" Width="1.5" PointX="5.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblTempOrder" Width="1.5" PointX="13.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblUser" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblUserBranch" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblUserRole" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblUserBranch_tblBranch" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblGarment_tblCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblClosing_tblUser" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblOrderItem_tblGarment" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblTempOrder_tblGarment" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblInvoice_tblOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblInvoice_tblUser" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblOrderItem_tblOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblUserRole_tblRole" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblUserBranch_tblUser" ManuallyRouted="false" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblUserRole_tblUser" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ELaundryDBModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblSchedulePickup" Width="2.75" PointX="3.375" PointY="13.25" />
+        <EntityTypeShape EntityType="ELaundryDBModel.tblTimeSlot" Width="1.5" PointX="8.75" PointY="0.75" />
+        <AssociationConnector Association="ELaundryDBModel.FK_tblSchedulePickup_tblUser" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "MakeClosing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.4.1.js"></script>
+<script src="~/js/denominator.js"></script>
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <em class="fa fa-home"></em>
+            </a>
+        </li>
+        <li class="active">Closing</li>
+    </ol>
+</div><!--/.row-->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Closing</h1>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Closing Records
+            </div>
+            <div class="panel-body">
+                <div id="tblClose" class="tablecontainer">
+
+                    <table id="tableclosing" class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    SN#
+                                </th>
+                                <th>
+                                    Username
+                                </th>
+                                <th>
+                                    SalesAmount
+                                </th>
+
+                                <th>
+                                    BrachName
+                                </th>
+                                <th>
+
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (ViewBag.Records.Count==0)
+                                {
+
+                                    <tr><td colspan="6">No Closing Record Found</td></tr>
+                                }
+
+
+
+                                else
+                                {
+                                    int i = 1;
+                                    foreach (var item in ViewBag.Records)
+                                    {
+                                        //DateTime closingdate=item.ClosingDate
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>
+                                                <input type="hidden" class="userid" value="@item.UserId" />
+                                                <input type="hidden" class="branchid" value="@item.BranchId" />
+                                                <input type="hidden" class="username" value="@item.Username" />
+                                                <input type="hidden" class="branchname" value="@item.BranchName" />
+                                                @item.Username
+                                            </td>
+                                            <td><input type="text" class="salesamount" readonly value="@item.TotalAmount" style="border:none" /></td>
+
+                                            <td>@item.BranchName</td>
+                                            <td>
+                                                <input type="button" class="payment btn btn-success" value="Receive Payment" />
+                                            </td>
+                                        </tr>
+                                        i++;
+
+
+                                    }
+                                }
+                            }
+
+
+
+                        </tbody>
+
+                    </table>
+                  
+                   
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div id="printdiv">
+                <div class="modal-header">
+                   
+                    <input type="hidden" id="mouserid" />
+                    <input type="hidden" id="mobranchid" />
+                    <b>Username:      </b><input type="text" style="border:none" readonly id="mousername" />
+
+                    <b>SalesAmount:Rs.   </b><input type="text" readonly id="mosalesamount" style="border:none" />
+                    <b>BranchName:  </b><input type="text" readonly id="bobranchname" style="border:none" />
+
+
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Cash Deposit</th>
+                                <th>Nrs.</th>
+
+
+                            </tr>
+                            <tr>
+                                <th>Denominator</th>
+                                <th>No.</th>
+                                <th></th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr>
+                                <td>1000X</td>
+                                <td>
+                                    <input type="text" id="thousand" onkeypress="return onlyNumbers(event);" onkeyup="calculateThousand();" class="form-control" value="0" />
+                                </td>
+                                <td>
+                                    <input type="text" id="thousandtotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>500X</td>
+                                <td> <input type="text" id="fivehundred" onkeypress="return onlyNumbers(event);" onkeyup="calculateFiveHundred();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="fivehundredtotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>100X</td>
+                                <td>
+                                    <input type="text" id="hundred" onkeypress="return onlyNumbers(event);" onkeyup="calculateOneHundred();" class="form-control" value="0" />
+                                </td>
+                                <td>
+                                    <input type="text" id="hundredtotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>50X</td>
+                                <td> <input type="text" id="fifty" onkeypress="return onlyNumbers(event);" onkeyup="calculateFifty();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="fiftytotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20X</td>
+                                <td> <input type="text" id="twenty" onkeypress="return onlyNumbers(event);" onkeyup="calculateTwenty();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="twentytotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10X</td>
+                                <td> <input type="text" id="ten" onkeypress="return onlyNumbers(event);" onkeyup="calculateTen()" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="tentotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5X</td>
+                                <td> <input type="text" id="five" onkeypress="return onlyNumbers(event);" onkeyup="calculateFive();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="fivetotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2X</td>
+                                <td> <input type="text" id="two" onkeypress="return onlyNumbers(event);" onkeyup="calculateTwo();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="twototal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1X</td>
+                                <td> <input type="text" id="one" onkeypress="return onlyNumbers(event);" onkeyup="calculateOne();" class="form-control" value="0" /></td>
+                                <td>
+                                    <input type="text" id="onetotal" class="totalprice form-control" style="border:none;" disabled value="0" />
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td colspan="2"> <b>Total Amount</b></td>
+                                <td> <input type="text" id="totalamount" class="form-control" style="border:none;" disabled value="0" /></td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="submitbutton btn btn-success" onclick="InsertClosing();">Confirm Payment</button>
+                <button type="button" id="btnPrintdeno" class="btn btn-info" onclick="return PrintElem();">Print</button>
+                <button type="button" id="close" class="btn btn-danger" onclick="modalclosing();">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+<script>
+
+    function deleteRows() {
+        var table = document.getElementById("tableclosing");
+        for (var i = table.rows.length - 1; i > 0; i--) {
+            table.deleteRow(i);
+        }
+    }
+     function onlyNumbers(event) {
+        var charCode = (event.which) ? event.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        else {
+
+
+            return true;
+        }
+    }
+</script>

@@ -1,0 +1,359 @@
+﻿@using ELaundry.Models;
+@{
+    ViewBag.Title = "ViewDhobiOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #0ead5a;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #0ead5a;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+@*<script>
+        function checkAllRows(obj) {
+
+        var objGridview = obj.parentNode.parentNode.parentNode;
+        var list = objGridview.getElementsByTagName("input");
+
+        for (var i = 0; i < list.length; i++) {
+            var objRow = list[i].parentNode.parentNode;
+            if (list[i].type == "checkbox" && obj != list[i]) {
+                if (obj.checked) {
+
+                    //If the header checkbox is checked then check all
+                    //checkboxes and highlight all rows.
+
+
+                    list[i].checked = true;
+                } else {
+
+                    list[i].checked = false;
+                }
+            }
+        }
+        }
+        function checkUncheckHeaderCheckBox(obj) {
+        var objRow = obj.parentNode.parentNode;
+
+        var objGridView = objRow.parentNode;
+
+        //Get all input elements in Gridview
+        var list = objGridView.getElementsByTagName("input");
+        for (var i = 0; i < list.length; i++) {
+            var objHeaderChkBox = list[0];
+
+            //Based on all or none checkboxes are checked check/uncheck Header Checkbox
+            var checked = true;
+
+            if (list[i].type == "checkbox" && list[i] != objHeaderChkBox) {
+                if (!list[i].checked) {
+                    checked = false;
+                    break;
+                }
+            }
+        }
+        objHeaderChkBox.checked = checked;
+    }
+    </script>*@
+
+<script language="javascript">
+    function SelectAllCheckboxes(spanChk) {
+        var IsChecked = spanChk.checked;
+        var Chk = spanChk;
+        Parent = Chk.form.elements;
+        for (i = 0; i < Parent.length; i++) {
+            if (Parent[i].type == "checkbox" && Parent[i].id != Chk.id) {
+                if (Parent[i].checked != IsChecked)
+                    Parent[i].click();
+            }
+        }
+    }
+    function SelectAllCheckboxesSpecific(spanChk) {
+        var IsChecked = spanChk.checked;
+        var Chk = spanChk;
+
+        var objRow = spanChk.parentNode.parentNode;
+
+        var objGridView = objRow.parentNode;
+        var items = objGridView.getElementsByTagName('input');
+        for (i = 0; i < items.length; i++) {
+            if (items[i].id != Chk && items[i].type == "checkbox") {
+                if (items[i].checked != IsChecked) {
+                    items[i].click();
+                }
+            }
+        }
+
+    }
+
+
+
+
+</script>
+<div class="row">
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <em class="fa fa-home"></em>
+            </a>
+        </li>
+        <li class="active">Dhobi Area</li>
+    </ol>
+   
+</div><!--/.row-->
+<div class="row">
+    <div class="col-lg-12">
+     
+        <input type="button" class="btn btn-info col-md-12" onclick="RefreshPage();" value="Refresh Orders" />
+        <hr />
+
+    </div>
+</div>
+<div class="row">
+    @{
+        if (ViewBag.Tokens==null)
+        {
+            <h2>No Order Placed Yet for Cleaning</h2>
+        }
+
+
+
+        else
+        {
+
+            foreach (var item in ViewBag.Tokens)
+            {
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Token No:@item.TokenNo
+
+                            <label class="pull-right switch">
+                                <input type="checkbox" id="chkAll" onchange="UpdateTokenStatus('@item.OrderId')" onclick="SelectAllCheckboxesSpecific(this);">
+                                <span class="slider"></span>
+                            </label>
+
+                        </div>
+                        <div class="panel-body">
+                            <div id="orderItems" class="tablecontainer">
+                                <table id="tableitems" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                SN#
+                                            </th>
+                                            <th>
+                                                ItemName
+                                            </th>
+                                            <th>
+                                                Quantity
+                                            </th>
+                                            <th>
+                                                TW
+                                            </th>
+                                            <th>
+                                                Status
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int branchid = Convert.ToInt32(Session["branchid"]);
+                                            DhobiDB kit = new DhobiDB();
+                                            List<tblTempOrder> lst = kit.getActiveTokenTempOrderItem(item.TokenNo,branchid);
+                                            int i = 1;
+
+                                            foreach (var temp in lst)
+                                            {
+
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@temp.tblGarment.GarmentName</td>
+                                                    <td>@temp.Quantity</td>
+                                                    <td>@temp.TW</td>
+                                                    <td>
+                                                        @if (temp.ItemState == "Queued")
+                                                        {
+                                                            <label class="switch">
+                                                                <input type="checkbox" id="rowChkBox" onchange="getTempOrderByID('@temp.TempOrderId')" onClick="SelectAllCheckboxesSpecific(this)">
+                                                                <span class="slider"></span>
+                                                            </label>
+                                                        }
+                                                        else
+                                                        {
+                                                            <label class="switch">
+                                                                <input type="checkbox" id="rowChkBox" checked="checked" onchange="getTempOrderByID('@temp.TempOrderId')" onClick="SelectAllCheckboxesSpecific(this)">
+                                                                <span class="slider"></span>
+                                                            </label>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                i = i + 1;
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+
+                                </table>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                                                }
+                                            }
+                                            }
+    </div>
+<script>
+    function getTempOrderByID(TempId) {
+
+
+        $.ajax({
+            url: "/Dhobi/GetTempOrderByTempId/" + TempId,
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+
+            success: function (result) {
+                //alert(result.TempOrderId);
+                UpdateStatus(result.TempOrderId);
+                //window.location.href = "/Dhobi/ViewDhobiOrder/";
+
+
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+        return false;
+
+    }
+    function UpdateStatus(TempId) {
+        $.ajax({
+            url: "/Dhobi/UpdateGarmentStatus/" + TempId,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+
+
+                  $.notify("Processed For Cleaning", {
+                    globalPosition: "top center",
+                    className: "success"
+                })
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function UpdateTokenStatus(orderid) {
+        var row = new Array();
+        $.ajax({
+            url: "/Dhobi/UpdateTokenStatus/" + orderid,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                $.notify("Token Release", {
+                    globalPosition: "top center",
+                    className: "success"
+                })
+                row.push({
+                    OrderId: orderid,
+                    TokenNo: result
+                });
+
+                DeleteTempOrderByTokenNo(result);
+                //DeleteTempOrderByTokenNo(result.tokenno);
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+    function DeleteTempOrderByTokenNo(tokenno) {
+        $.ajax({
+            url: "/Dhobi/DeleteTempOrder/" + tokenno,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                //alert('Temp Record Deleted');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function RefreshPage() {
+           window.location.href = "/Dhobi/ViewDhobiOrder/";
+
+    }
+</script>

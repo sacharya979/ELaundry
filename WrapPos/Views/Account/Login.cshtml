@@ -1,0 +1,155 @@
+﻿@model ELaundry.Models.ViewModel.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ELaundry - Login</title>
+    @*<link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/datepicker3.css" rel="stylesheet">*@
+    @*<link href="~/css/styles.css" rel="stylesheet">*@
+    <link href="~/css/LoginNew.css" rel="stylesheet" />
+    <style>
+        .validation-summary-errors {
+   
+    
+   
+    }
+span.validation-summary-errors {
+    border-bottom-color: #D9FFB2;
+    display:block;
+    }
+ul.validation-summary-errors {
+    margin:0;
+    padding:0;
+    border-top:none;
+    }
+    </style>
+</head>
+<body>
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+                <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+                <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+                <!------ Include the above in your HEAD tag ---------->
+
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+              
+
+                <div class="container">
+                    <div class="omb_login">
+                        <h3 class="omb_authTitle">Login or <a href="#">Sign up</a></h3>
+                        <div class="row omb_row-sm-offset-3 omb_socialButtons">
+                            <div class="col-xs-4 col-sm-2">
+                                <a href="#" class="btn btn-lg btn-block omb_btn-facebook">
+                                    <i class="fa fa-facebook visible-xs"></i>
+                                    <span class="hidden-xs">Facebook</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4 col-sm-2">
+                                <a href="#" class="btn btn-lg btn-block omb_btn-twitter">
+                                    <i class="fa fa-twitter visible-xs"></i>
+                                    <span class="hidden-xs">Twitter</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4 col-sm-2">
+                                <a href="#" class="btn btn-lg btn-block omb_btn-google">
+                                    <i class="fa fa-google-plus visible-xs"></i>
+                                    <span class="hidden-xs">Google+</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row omb_row-sm-offset-3 omb_loginOr">
+                            <div class="col-xs-12 col-sm-6">
+                                <hr class="omb_hrOr">
+                                <span class="omb_spanOr">or</span>
+                            </div>
+                        </div>
+
+                        <div class="row omb_row-sm-offset-3">
+                            <div class="col-xs-12 col-sm-6">
+                                <form class="omb_loginForm" action="" autocomplete="off" method="POST">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Enter Username", @autofocus = "", @autocomplete = "off" })
+                                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                    </div>
+                                    <span class="help-block"></span>
+
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Enter Password" })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Login</button>
+
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row omb_row-sm-offset-3">
+                            <div class="col-xs-12 col-sm-3">
+                                <label class="checkbox">
+                                    <input type="checkbox" value="remember-me">Remember Me
+                                </label>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <p class="omb_forgotPwd">
+                                    <a href="#">Forgot password?</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+                @*<div class="login-panel panel panel-default">
+                <div class="panel-heading">Log in to E-LAUNDRY</div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="panel-body">
+
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Enter Username", @autofocus = "", @autocomplete="off" })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Enter Password" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="checkbox" style="margin-left:20px;">
+                            @Html.CheckBox("RememberMe")Remember  Me
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Login" />
+
+                    </fieldset>
+
+                </div>
+            </div>*@
+
+            }
+    <script src="~/js/jquery-1.11.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.validate.min.js"></script>
+    <script src="~/js/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
+</html>

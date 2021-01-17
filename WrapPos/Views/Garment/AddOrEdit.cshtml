@@ -1,0 +1,111 @@
+﻿@model ELaundry.Models.ViewModel.GarmentViewModel
+@{
+    Layout = null;
+}
+@using (Html.BeginForm("AddOrEdit", "Garment", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.GarmentId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryName, new { @class = "control-label col-md-3" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "CategoryName"), "Choose Category", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GarmentName, new { @class = "control-label col-md-3" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.GarmentName, new { @class = "GarmentName form-control", @onkeyup="CheckGarment()" })
+                @Html.ValidationMessageFor(model => model.GarmentName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitPrice, new { @class = "control-label col-md-3" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control", @onkeypress="return isNumberKey(event,this)"  })
+                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+            <label class="control-label col-md-3"></label>
+            <div class="col-md-8">
+                <input type="submit" id="submitRecord" value="Create" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+
+      
+     function isNumberKey(evt, element) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 46 || charCode == 8))
+            return false;
+        else {
+            var len = $(element).val().length;
+            var index = $(element).val().indexOf('.');
+            if (index > 0 && charCode == 46) {
+                return false;
+            }
+            if (index > 0) {
+                var CharAfterdot = (len + 1) - index;
+                if (CharAfterdot > 3) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+
+     function CheckGarment() {
+
+        $.ajax({
+            url: "/Garment/CheckGarment/",
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data: {
+                GarmentName: $(".GarmentName").val()
+            },
+            success: function (result) {
+
+                if (result == true)
+                {
+                   alert("GarmentName Already Exists");
+
+                        $('#submitRecord').prop('disabled', true);
+
+                    }
+                else {
+
+
+                        $('#submitRecord').prop('disabled', false);
+                    }
+
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+
+
+
+}
+</script>

@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "OrderSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <em class="fa fa-home"></em>
+            </a>
+        </li>
+        <li class="active">Search Record</li>
+    </ol>
+</div><!--/.row-->
+<!-- Main content -->
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Message</h2>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="input-group">
+                    <input id="searchbill" type="text" onkeypress = "return onlyNumbers(event);" class="form-control input-md" placeholder="Enter Bill No:"><span class="input-group-btn">
+                        <button onclick="GetBillSearch();"   class="btn btn-primary btn-md" id="btn-chat">Search</button>
+                    </span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table id="searchinvoice" class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                ItemName
+                            </th>
+                            <th>
+                                Quantity
+                            </th>
+                            <th>
+                                Service Charge 
+                            </th>
+                            <th>
+                                Total
+                            </th>
+                            <th>
+                                TW
+                            </th>
+                          
+
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        <tr><td colspan="5">Click to Search</td></tr>
+                    </tbody>
+
+                </table>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function GetBillSearch() {
+        if ($('#searchbill').val().trim() == '') {
+            sweetAlert
+                        ({
+                            title: "Information!",
+                            text: "Please Fill Bill No",
+                            type: "warning"
+                        });
+        }
+        else {
+            var id = $('#searchbill').val();
+            $.ajax({
+
+                url: "/OrderItem/OrderSearchbyId/" + id,
+                type: "GET",
+                contentType: "json",
+                dataType: "json",
+
+                success: function (result) {
+                    var html = '';
+                    if (result == "") {
+                         sweetAlert
+                        ({
+                            title: "Information!",
+                            text: "No Record Found Please Enter Valid Bill No",
+                            type: "warning"
+                        });
+
+                    }
+                    else {
+
+
+                        $.each(result, function (key, item) {
+                            html += '<tr>';
+                            html += '<td>' + item.GarmentName + '</td>';
+                            html += '<td>' + item.Quantity + '</td>';
+                            html += '<td>' + item.UnitPrice + '</td>';
+                            html += '<td>' + item.Total + '</td>';
+                            html += '<td>' + item.TW + '</td>';
+
+
+                            html += '</tr>';
+                        });
+                        $('.tbody').html(html);
+                    }
+
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    return false;
+
+    }
+  
+        function onlyNumbers(event) {
+            var charCode = (event.which) ? event.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+</script>
+

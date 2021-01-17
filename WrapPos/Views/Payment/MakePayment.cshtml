@@ -1,0 +1,274 @@
+﻿@using ELaundry.Models
+@{
+    ViewBag.Title = "MakePayment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/printutilities/style.css" rel="stylesheet" />
+<link href="~/css/loading.css" rel="stylesheet" />
+<link href="~/css/jqbtk.min.css" rel="stylesheet" />
+
+<div id="loader" class="lds-dual-ring hidden overlay"></div>
+<div class="row">
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <em class="fa fa-home"></em>
+            </a>
+        </li>
+        <li class="active">Payment</li>
+    </ol>
+</div><!--/.row-->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Manage Laundry Orders</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Payment Panel
+            </div>
+            <div class="panel-body">
+                <div class="loader" style="display:none">
+                    <div class="loader-wheel"></div>
+                    <div class="loader-text"></div>
+                </div>
+                <div class="row">
+                    <input type="hidden" id="orderid" value="@ViewBag.OrderId" />
+                    <div id="ticket" style="display:none">
+                        <img src="~/printutilities/pos.jpg" alt="Logo">
+                        <p class="centered">
+                          ELaundry Nepal
+                            <br>Kathmandu, Nepal
+                            <br>+9779866027202
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="quantity">SN</th>
+                                    <th class="description">ItemName</th>
+                                    <th class="qty">Qty</th>
+                                    <th class="price">Charge per pice.</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbodyprint">
+
+                                @{
+                                    ELaundryDBEntities _db = new ELaundryDBEntities();
+                                    Decimal totalamount = ViewBag.TotalAmount;
+                                    decimal taxamount = (.15M * totalamount);
+                                    decimal payamount = totalamount - taxamount;
+                                    decimal grandtotal = taxamount + payamount;
+
+                                    tblSetting tbs = _db.tblSettings.OrderByDescending(s => s.SettingId).Take(1).FirstOrDefault();
+
+                                    decimal discountamount = Convert.ToDecimal(tbs.DiscountRate / 100 * grandtotal);
+                                    int i = 1;
+                                    decimal totalpay = grandtotal - discountamount;
+                                    foreach (var item in ViewBag.Orders)
+                                    {
+
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>@item.GarmentName</td>
+                                            <td> @item.Quantity</td>
+                                            <td>@item.UnitPrice</td>
+
+
+
+
+                                        </tr>
+                                        i++;
+                                    }
+                                    <tr>
+                                        <td colspan="3">Total Amount</td>
+                                        <td>@payamount</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">Tax Amount</td>
+                                        <td>@taxamount</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">Discount Amount</td>
+                                        <td>@discountamount</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">Grand Total</td>
+                                        <td>@totalpay</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <p class="centered">
+                            Thanks for your choosing us! Keep Shinning.. 
+                            <br>ELaundry Nepal, PCPS College
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="col-md-6">
+
+
+
+                        <div id="orderItems" class="tablecontainer">
+                            <table id="tableorderitems" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            ItemName
+                                        </th>
+                                        <th>
+                                            Quantity
+                                        </th>
+                                        <th>
+                                            Service Charge
+                                        </th>
+                                        <th>
+                                            Total
+                                        </th>
+                                        <th>
+                                            TW
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody class="tbody">
+                                    @foreach (var item in ViewBag.Orders)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input class='GarmentId' type='hidden' value="@item.GarmentId">
+                                                @item.GarmentName
+                                            </td>
+                                            <td>
+                                                <input class='quantity' type='hidden' value="@item.Quantity">
+                                                @item.Quantity
+                                            </td>
+                                            <td>
+                                                <input class='unitprice' type='hidden' value="@item.UnitPrice">
+                                                @item.UnitPrice
+                                            </td>
+                                            <td><input type="text" class="totalprice" style="border:none; width:20px" value="@item.Total"></td>
+                                            <td>
+                                                <input class='tww' type='hidden' value="@Html.Raw(item.TW)">
+                                                @item.TW
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                            <label id="totallabel">Gross Amount</label>
+                            <input type="text" class="form-control" id="grandtotal" value="@ViewBag.TotalAmount" readonly="readonly" />
+                            <label id="totallabel">Discount Amount</label>
+                            <input type="text" class="form-control" id="grandtotal" value="@ViewBag.DiscountAmount" readonly="readonly" />
+                            <label id="totallabel">Net Amount</label>
+                            <input type="text" class="form-control" id="grandtotal" value="@ViewBag.NetAmount" readonly="readonly" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-horizontal">
+                            <fieldset>
+                                <!-- Name input-->
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">TokenNo#</label>
+                                    <div class="col-md-9">
+                                        @*<input id="tokenno" onchange="getbyTokenNo()"  name="tokenno" type="text" placeholder="Enter Token No" class="tokenno form-control">*@
+                                        <input id="tokenno" name="tokenno" type="text" onkeypress="return onlyNumbers(event);" onkeyup=" CheckTokenStatus();" placeholder="Enter Token No" class="tokenno form-control">
+                                    </div>
+                                </div>
+
+                                <!-- Email input-->
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="email">Paid Amount</label>
+                                    <div class="col-md-9">
+                                        <input type="tel" class="keyboard form-control" onkeyup="calculateRemaining();" onkeypress="return isNumberKey(event,this)" id="telephone-keypad-demo">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Return Amount</label>
+                                    <div class="col-md-9">
+                                        <input type="text" readonly="readonly" class="returnamount form-control" id="retamount">
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Form actions -->
+                                <div class="form-group">
+                                    <div class="col-md-12 widget-right">
+                                        <button type="button" onclick="myPrint()" disabled class="btn btn-default btn-md pull-right" id="submitRecord">Submit and Print</button>
+
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="~/js/jqbtk/jqbtk.min.js"></script>
+<script src="~/js/payment.js"></script>
+<script src="~/js/sample.bundle.js"></script>
+
+
+<script>
+    $(function () {
+        $('#telephone-keypad-demo').keyboard();
+    });
+    function onlyNumbers(event) {
+        var charCode = (event.which) ? event.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        else {
+
+
+            return true;
+        }
+    }
+    function isNumberKey(evt, element) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 46 || charCode == 8))
+            return false;
+        else {
+            var len = $(element).val().length;
+            var index = $(element).val().indexOf('.');
+            if (index > 0 && charCode == 46) {
+                return false;
+            }
+            if (index > 0) {
+                var CharAfterdot = (len + 1) - index;
+                if (CharAfterdot > 3) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+
+
+</script>
+
+
+
